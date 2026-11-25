@@ -21,9 +21,14 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 const joke =
   "The meeting was just the host reading aloud the email we were all already CC'd on.";
 
-// Gate: the entry must be 1-200 characters, with no control characters.
+// Gate: the entry must be 1-200 characters, with no control characters,
+// and a single line — the judge reads one line, so a newline would break
+// the entry into two.
 if (joke.length < 1 || joke.length > 200) {
   throw new Error(`joke length ${joke.length} is outside the 1-200 gate`);
+}
+if (joke.includes("\n") || joke.includes("\r")) {
+  throw new Error("joke must be a single line with no newline characters");
 }
 for (let i = 0; i < joke.length; i++) {
   const code = joke.charCodeAt(i);
